@@ -2,21 +2,18 @@
 from __future__ import unicode_literals
 
 import httplib
-import sys
 import urllib
 
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 import time
 
-FIRST_DATE = date(2017, 12, 01)  # year, month, day
+FIRST_DATE = date(2017, 12, 1)  # year, month, day
 LAST_DATE = date(2017, 12, 18)
 ONE_DAY = timedelta(days=1)
 
 
 def main():
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
 
     httpClient = None
 
@@ -61,15 +58,15 @@ def main():
                     table = soup.find('table', class_='table_c')
 
                     if table:
-                        f.write('%s,%s,%s\n' % (d.year, d.month, d.day))
+                        f.write(b'%s,%s,%s\n' % (d.year, d.month, d.day))
                         for tr in table.find_all('tr')[1:]:
                             output = []
                             for td in tr.find_all('td'):
                                 data = td.string.strip() if td.string else ''
-                                output.append(data)
+                                output.append(data.encode('utf8'))
 
-                            f.write(','.join(output) + '\n')
-                        f.write('\n')
+                            f.write(b','.join(output) + b'\n')
+                        f.write(b'\n')
 
                 d += ONE_DAY
 

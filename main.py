@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 from datetime import date, timedelta
 import time
 
-FIRST_DATE = date(2017, 12, 1)  # year, month, day
-LAST_DATE = date(2017, 12, 18)
+FIRST_DATE = date(2017, 1, 1)  # year, month, day
+LAST_DATE = date(2017, 1, 5)
 ONE_DAY = timedelta(days=1)
 
 
@@ -27,7 +27,7 @@ def main():
             while d <= LAST_DATE:
 
                 params = urllib.urlencode({
-                    'qtype': 2,
+                    'qtype': 3,
                     'commodity_id': 'TXO',
                     'commodity_id2': '',
                     'market_code': 1,
@@ -39,7 +39,7 @@ def main():
                     'syear': d.year,
                     'smonth': d.month,
                     'sday': d.day,
-                    'datestart': '%s / %s / %s' % (d.year, d.month, d.day),
+                    'datestart': '%s/%s/%s' % (d.year, d.month, d.day),
                     'MarketCode': 1,
                     'commodity_idt': 'TXO',
                     'commodity_id2t': '',
@@ -63,9 +63,11 @@ def main():
                             output = []
                             for td in tr.find_all('td'):
                                 data = td.string.strip() if td.string else ''
-                                output.append(data.encode('utf8'))
+                                output.append(data)
 
-                            f.write(b','.join(output) + b'\n')
+                            f.write(
+                                (','.join(output) + '\n').encode('big5')
+                            )
                         f.write(b'\n')
 
                 d += ONE_DAY

@@ -8,12 +8,21 @@ from bs4 import BeautifulSoup
 from datetime import date, timedelta
 import time
 
-FIRST_DATE = date(2017, 1, 1)  # year, month, day
-LAST_DATE = date(2017, 1, 5)
+FIRST_DATE = date(2017, 12, 14)  # year, month, day
+LAST_DATE = date(2017, 12, 18)
+
 ONE_DAY = timedelta(days=1)
+
+MARKET_CODE_NORMAL = 0
+MARKET_CODE_AFTER_HOURS = 1
 
 
 def main():
+
+    headers = {
+        'Content-type': 'application/x-www-form-urlencoded',
+        'Accept': 'text/plain',
+    }
 
     httpClient = None
 
@@ -22,7 +31,7 @@ def main():
 
         d = FIRST_DATE
 
-        with open('output.txt', 'w') as f:
+        with open('output.csv', 'w') as f:
 
             while d <= LAST_DATE:
 
@@ -30,7 +39,7 @@ def main():
                     'qtype': 3,
                     'commodity_id': 'TXO',
                     'commodity_id2': '',
-                    'market_code': 1,
+                    'market_code': MARKET_CODE_NORMAL,
                     'goday': '',
                     'dateaddcnt': 0,
                     'DATA_DATE_Y': d.year,
@@ -40,7 +49,7 @@ def main():
                     'smonth': d.month,
                     'sday': d.day,
                     'datestart': '%s/%s/%s' % (d.year, d.month, d.day),
-                    'MarketCode': 1,
+                    'MarketCode': MARKET_CODE_NORMAL,
                     'commodity_idt': 'TXO',
                     'commodity_id2t': '',
                     'commodity_id2t2': '',
@@ -48,7 +57,7 @@ def main():
 
                 print 'Request %s/%s/%s' % (d.year, d.month, d.day)
 
-                httpClient.request('POST', '/chinese/3/3_2_2.asp', params)
+                httpClient.request('POST', '/chinese/3/3_2_2.asp', params, headers)
 
                 response = httpClient.getresponse()
 

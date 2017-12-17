@@ -71,7 +71,11 @@ def main():
                         for tr in table.find_all('tr')[1:]:
                             output = []
                             for td in tr.find_all('td'):
-                                data = td.string.strip() if td.string else ''
+                                element = td
+                                if td.font:
+                                    element = td.font
+
+                                data = element.string.strip() if element.string else ''
                                 output.append(data)
 
                             f.write(

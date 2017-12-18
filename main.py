@@ -17,6 +17,13 @@ MARKET_CODE_NORMAL = 0
 MARKET_CODE_AFTER_HOURS = 1
 
 
+def to_simple_string(s):
+    s = s or ''
+    for old in ['\n', '\r', '\t']:
+        s = s.replace(old, '')
+    return s.strip()
+
+
 def main():
 
     headers = {
@@ -75,7 +82,7 @@ def main():
                                 if td.font:
                                     element = td.font
 
-                                data = element.string.strip() if element.string else ''
+                                data = to_simple_string(element.string)
                                 output.append(data)
 
                             f.write(
